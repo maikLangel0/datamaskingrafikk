@@ -130,7 +130,7 @@ function connectColorAttribute(gl, baseShaderInfo, positionAndColor) {
 	const numComponents = 4;
 	const type = gl.FLOAT;
 	const normalize = false;
-	const stride = 7*4;	//<== Spesifiserer, i antall bytes, avstanden mellom verteksene.
+	const stride = 7*4;	//<== Spesifiserer, i antall bytes, avstanden mellom verteksene.w
 	const offset = 3*4;	//<== Hvor starter fargen (bytenr) innafor verteksen.
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionAndColor);
 	gl.vertexAttribPointer(

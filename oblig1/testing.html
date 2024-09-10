@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="utf-8">
+    <title>WebGL Triangle Transformation</title>
+    <link rel="stylesheet" href="../base/webgl.css" type="text/css">
+    <script src="../base/lib/gl-matrix.js"></script>
+    <!-- <script src="../base/lib/cuon-matrix.js"></script> -->
+</head>
+<body>
+    <div style="top:0px; left:15px; width:100%; text-align:left; color:black;" class="ui"></div>
+        <h2>WebGL Hello Triangle2</h2>
+    </div>
+
+    <script id="base-vertex-shader" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
+        uniform mat4 uModelViewMatrix;
+        uniform mat4 uProjectionMatrix;
+        varying lowp vec4 vColor;
+
+        void main(void) {
+            gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition, 1.0);
+            vColor = aVertexColor;
+            gl_PointSize = 10.0;
+        }
+
+    </script>
+
+    <script id="base-fragment-shader" type="x-shader/x-fragment">
+        precision mediump float;
+        varying lowp vec4 vColor;
+
+        void main(void) {
+            gl_FragColor = vColor;
+        }
+
+    </script>
+
+    <script type="module">
+        'use strict';
+        import {main} from "./testing.js";
+        main();
+    </script>
+
+</body>
+
+</html>

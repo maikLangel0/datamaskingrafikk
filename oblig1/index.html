@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="utf-8">
+    <title>Oblig 1</title>
+    <link rel="stylesheet" href="../base/webgl.css" type="text/css">
+    <script src="../base/lib/gl-matrix.js"></script>
+    <!-- <script src="../base/lib/cuon-matrix.js"></script> -->
+</head>
+<body>
+
+    <script id="base-vertex-shader" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+
+        attribute vec4 aVertexColor;
+        varying lowp vec4 vColor;
+
+        uniform mat4 uModelViewMatrix;
+        uniform mat4 uProjectionMatrix;
+
+        void main(void) {
+            gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition, 1.0);
+            vColor = aVertexColor;
+        }
+    </script>
+
+    <script id="base-fragment-shader" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying lowp vec4 vColor;
+
+        uniform vec4 uFragColor;
+        
+        void main(void) {
+           gl_FragColor =  uFragColor + vColor;
+        }
+    </script>
+
+    <script type="module">
+        import {main} from "./main.js";
+        main();
+    </script>
+
+</body>
+
+</html>
