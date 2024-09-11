@@ -72,13 +72,13 @@ export function groundMesh(dimentions) {
     const z = dimentions[2];
 
     return new Float32Array([
-        x, y,  z,  0, 0.4, 0, 1,  // Top-right
-       -x, y,  z,  0, 0.4, 0, 1,  // Top-left
-        x, y, -z,  0, 0.4, 0, 1,  // Bottom-right
+        x, y,  z,  0, 0.6, 0, 1,  // Top-right
+       -x, y,  z,  0, 0.6, 0, 1,  // Top-left
+        x, y, -z,  0, 0.6, 0, 1,  // Bottom-right
 
-        x, y, -z,  0, 0.4, 0, 1,  // Bottom-right
-       -x, y, -z,  0, 0.4, 0, 1,  // Bottom-left
-       -x, y,  z,  0, 0.4, 0, 1   // Top-left
+        x, y, -z,  0, 0.6, 0, 1,  // Bottom-right
+       -x, y, -z,  0, 0.6, 0, 1,  // Bottom-left
+       -x, y,  z,  0, 0.6, 0, 1   // Top-left
     ]);
 }
 
@@ -162,6 +162,26 @@ export function aFrameRoofMesh(dimentions, color, height) {
     ]
 }
 
+export function roadMesh(dimentions, color, offZ) {
+    const x = dimentions[0];
+    const y = dimentions[1]; 
+    const z = dimentions[2]; 
+    const r = color[0];
+    const g = color[1];
+    const b = color[2];
+    const a = color[3];
+
+    return new Float32Array([
+        x, y,  z + offZ, r,g,b,a,  // Top-right
+       -x, y,  z + offZ, r,g,b,a,  // Top-left
+        x, y, -z + offZ, r,g,b,a,  // Bottom-right
+
+        x, y, -z + offZ, r,g,b,a,  // Bottom-right
+       -x, y, -z + offZ, r,g,b,a,  // Bottom-left
+       -x, y,  z + offZ, r,g,b,a   // Top-left
+    ]);
+}
+
 export function coneRoofMesh(dimentions, radius, height, segments, color) {
     const offsetX = dimentions[0] - radius;
     const offsetY = height;
@@ -199,9 +219,9 @@ export function coneRoofMesh(dimentions, radius, height, segments, color) {
 export function windowMesh(offX, offY, offZ, height) {
 
     return [
-        0.2 + offX, 0 + offY, 1.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 7
-        0.2 + offX, height + offY, 1.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 8
-       -0.2 + offX, height + offY, 1.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 9
+        0.2 + offX, 0 + offY, 1.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 7
+        0.2 + offX, height + offY, 1.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 8
+       -0.2 + offX, height + offY, 1.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 9
 
         0.2 + offX, 0 + offY, 1.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 10
        -0.2 + offX, 0 + offY, 1.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 11
@@ -211,32 +231,32 @@ export function windowMesh(offX, offY, offZ, height) {
 
 export function doorMesh(offZ) {
     return [
-        0.3, 0, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 1
-        0.3, 1.1, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 2
-       -0.3, 1.1, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 3
+        0.3, 0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 1
+        0.3, 0.9, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 2
+       -0.3, 0.9, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 3
 
-        0.3, 0, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 4
-       -0.3, 0, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 5
-       -0.3, 1.1, 1.005 +  offZ,  0, 0, 0, 1  // Vertex 6
+        0.3, 0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 4
+       -0.3, 0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 5
+       -0.3, 0.9, 1.01 +  offZ,  0, 0, 0, 1  // Vertex 6
     ];
 }
 
 export function garageMesh(offZ) {
     return [
-        0.9, 0.0, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 1
-        0.9, 1.1, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 2
-       -0.9, 1.1, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 3
+        0.9, 0.0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 1
+        0.9, 0.9, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 2
+       -0.9, 0.9, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 3
 
-        0.9, 0.0, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 4
-       -0.9, 0.0, 1.005 +  offZ,  0, 0, 0, 1,  // Vertex 5
-       -0.9, 1.1, 1.005 +  offZ,  0, 0, 0, 1  // Vertex 6
+        0.9, 0.0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 4
+       -0.9, 0.0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 5
+       -0.9, 0.9, 1.01 +  offZ,  0, 0, 0, 1  // Vertex 6
     ];
 }
 
 export function cylinderMesh(dimentions, radius, height, segments, color) {
-    const offsetX = dimentions[0] - radius;
+    const offsetX = dimentions[0];
     const offsetY = 0;
-    const offsetZ = dimentions[2] - radius;
+    const offsetZ = dimentions[2];
     const r = color[0];
     const g = color[1];
     const b = color[2];
@@ -296,4 +316,28 @@ export function bladesMesh(color) {
     -3, 0, 1,  r, g, b, a,  // Vertex 2
     -3, 3, 1,  r, g, b, a,  // Vertex 3
    ])
+}
+
+export function plankMesh(length, width, height, offX, offZ, orient, r, g, b, a) {
+    if(orient) {
+        return [
+            length + offX, height, offZ, r, g, b, a,
+            -0 + offX, height, offZ, r, g, b, a,
+            length + offX, height + width, offZ, r, g, b, a,
+
+            -0 + offX, height + width, offZ, r, g, b, a,
+            length + offX, height + width, offZ, r, g, b, a,
+            -0 + offX, height, offZ, r, g, b, a,
+        ]
+    } else {
+        return [
+            offX, height, length + offZ, r, g, b, a,
+            offX, height, -0 + offZ, r, g, b, a,
+            offX, height + width, length + offZ, r, g, b, a,
+
+            offX, height + width, -0 + offZ, r, g, b, a,
+            offX, height + width, length + offZ, r, g, b, a,
+            offX, height, -0 + offZ, r, g, b, a,
+        ]
+    }
 }

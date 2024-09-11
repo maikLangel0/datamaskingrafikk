@@ -1,8 +1,10 @@
 import { WebGLShader, WebGLCanvas, Camera, clearCanvas, connectAttribute } from "./elp.js";
 import '../base/lib/gl-matrix.js';
-import { house, ground, cylinder, blades } from "./meshGen.js";
+import { house, ground, cylinder, blades, houseCluster, road, fence } from "./meshGen.js";
+import { colors } from "./colors.js";
+import { pos, dim } from "./meshDImPositions.js";
 
-const webGLCanvas = new WebGLCanvas('myCanvas', document.body, 700, 920);
+const webGLCanvas = new WebGLCanvas('myCanvas', document.body, 1916, 900);
 const gl = webGLCanvas.gl;
 
 let vertexShaderS = document.getElementById('base-vertex-shader').innerHTML;
@@ -24,65 +26,104 @@ window.addEventListener('keyup', (event) => {
 export function main(){
 
     let camera = new Camera(
-        vec3.fromValues(10, 10, 30),
+        vec3.fromValues(0, 1, 10),
         vec3.fromValues(0, 0, 0),
         45,
         gl.canvas.clientWidth / gl.canvas.clientHeight,
         0.1,
-        100
+        1000
     );
-    const darkGreen = vec4.fromValues(0,0.4,0,0.5);
-    const red = vec4.fromValues(1,0,0,1);
-    const darkRed = vec4.fromValues(0.2,0,0,1);
-    const maroon = vec4.fromValues(0.5,0.1,0.2,0.5);
-    const lightBlue = vec4.fromValues(0, 0.4, 1, 1);
-    const black = vec4.fromValues(0,0,0,1);
-    const darkBlue = vec4.fromValues(0.1,0,0.4,0.2);
-    const white = vec4.fromValues(1,1,1,1);
-    const gray = vec4.fromValues(0,0,0,0.1);
+    //const [houseCluster1, maxLength, maxWidth] = houseCluster([]);
 
-    const groundDim = vec3.fromValues(50,0,50);
-    const groundPos = vec3.fromValues(0,0,0);
+    const groundObj = initMesh(
+        ground(dim.ground), 
+        pos.groundPos, baseShaders, gl.TRIANGLES
+    );
+    //-------------------------------
+    const littlePersonObj = initMesh(
+        house(dim.littlePerson, colors.green, 2, colors.green, true), 
+        pos.littlePersonPos, baseShaders, gl.TRIANGLES
+    );
+    const widePersonObj = initMesh(
+        house(dim.widePerson, colors.darkBlue, 1, colors.black, false, true), 
+        pos.widePersonPos, baseShaders, gl.TRIANGLES
+    );
+    //-------------------------------
+    const redHouseObj = initMesh(
+        house(dim.redHouse, colors.red, 1, colors.black, true), 
+        pos.redHousePos, baseShaders, gl.TRIANGLES
+    );
+    const deepBlueHouseObj = initMesh(
+        house(dim.deepBlueHouse, colors.darkBlue, 2, colors.black, false), 
+        pos.deepBlueHousePos, baseShaders, gl.TRIANGLES
+    );
+    const deepRedHouseObj = initMesh(
+        house(dim.deepRedHouse, colors.darkRed, 0, colors.black, false, true), 
+        pos.deepRedHousePos, baseShaders, gl.TRIANGLES
+    );
+    //-------------------------------
+    const purpleHouseObj = initMesh(
+        house(dim.purpleHouse, colors.purple, 1, colors.black, false, true), 
+        pos.purpleHousepos, baseShaders, gl.TRIANGLES
+    );
+    const whiteHouseObj = initMesh(
+        house(dim.whiteHouse, colors.white, 0, colors.maroon, true), 
+        pos.whiteHousePos, baseShaders, gl.TRIANGLES
+    );
+    //-------------------------------
+    const pinkHouseObj = initMesh(
+        house(dim.pinkHouse, colors.pink, 2, colors.gray, true), 
+        pos.pinkHousePos, baseShaders, gl.TRIANGLES
+    );
+    const usbFlashDriveObj = initMesh(
+        house(dim.usbFlashDrive, colors.black, 1, colors.lightBlue), 
+        pos.usbFlashDrivePos, baseShaders, gl.TRIANGLES
+    );
+    const burjObj = initMesh(
+        house(dim.burj, colors.gray, 1, colors.gray, false, true), 
+        pos.burjPos, baseShaders, gl.TRIANGLES
+    );
+    //-------------------------------
+    const windMillObj = initMesh(
+        cylinder(dim.windmill, colors.cream), 
+        pos.windmillPos, baseShaders, gl.TRIANGLES
+    );
+    const windmillBladesObj = initMesh(
+        blades(colors.metal), 
+        pos.bladesPos, baseShaders, gl.TRIANGLES
+    );
+    //-------------------------------
+    const roadObj = initMesh(
+        road(dim.roadDim, colors.lightGray, 0), 
+        pos.roadPos, baseShaders, gl.TRIANGLES
+    );
+    //-------------------------------
+    const fenceObj1 = initMesh(
+        fence([dim.widePerson, dim.littlePerson]), 
+        pos.widePersonPos, baseShaders, gl.TRIANGLES
+    );
+    const fenceObj2 = initMesh(
+        fence([dim.deepRedHouse, dim.deepBlueHouse, dim.redHouse]), 
+        pos.deepRedHousePos, baseShaders, gl.TRIANGLES
+    );
+    const fenceObj3 = initMesh(
+        fence([dim.purpleHouse, dim.whiteHouse]), 
+        pos.purpleHousepos, baseShaders, gl.TRIANGLES
+    );
+    const fenceObj4 = initMesh(
+        fence([dim.pinkHouse, dim.usbFlashDrive, dim.burj]), 
+        pos.pinkHousePos, baseShaders, gl.TRIANGLES
+    );
 
-    const redHouseDim = vec3.fromValues(1,4,1);
-    const redHousePos = vec3.fromValues(-2,0,0);
+    const objects = [
+        groundObj, redHouseObj, deepBlueHouseObj, 
+        deepRedHouseObj, windMillObj, windmillBladesObj, 
+        purpleHouseObj, whiteHouseObj, pinkHouseObj,
+        usbFlashDriveObj, burjObj, littlePersonObj,
+        widePersonObj, roadObj, fenceObj1, fenceObj2,
+        fenceObj3, fenceObj4
+    ];
 
-    const deepBlueHouseDim = vec3.fromValues(1,3,1);
-    const deepBlueHousePos = vec3.fromValues(-4,0,0);
-
-    const deepRedHouseDim = vec3.fromValues(2,6,2);
-    const deepRedHousePos = vec3.fromValues(-7,0,0);
-
-    const windmillDim = vec3.fromValues(1,10,1);
-    const windmillPos = vec3.fromValues(0, 0,-10);
-
-    const bladesDim = vec3.fromValues(3, 3, 3);
-    const bladesPos = vec3.fromValues(0, 10, -10);
-
-    /*initMesh(
-        mesh: Float32Array, 
-        dimentions: vec3, 
-        color: vec4, 
-        position: vec3, 
-        shader: Shader, 
-        mode: gl.---)
-    */
-
-    const redHouse = house(redHouseDim, red, 1, black, true);
-    const deepBlueHouse = house(deepBlueHouseDim, darkBlue, 2, black, false);
-    const deepRedHouse = house(deepRedHouseDim, darkRed, 0, black, false, true);
-    const windmillPole = cylinder(windmillDim, white);
-    const windmillBlades = blades(bladesDim, gray);
-    const grass = ground(groundDim)
-
-    let groundObj = initMesh(grass,groundPos, baseShaders, gl.TRIANGLES);
-    let redHouseObj = initMesh(redHouse, redHousePos, baseShaders, gl.TRIANGLES);
-    let deepBlueHouseObj = initMesh(deepBlueHouse, deepBlueHousePos, baseShaders, gl.TRIANGLES);
-    let deepRedHouseObj = initMesh(deepRedHouse, deepRedHousePos, baseShaders, gl.TRIANGLES);
-    let windMillObj = initMesh(windmillPole, windmillPos, baseShaders, gl.TRIANGLES);
-    let windmillBladesObj = initMesh(windmillBlades, bladesPos, baseShaders, gl.TRIANGLES);
-
-    let objects = [groundObj, redHouseObj, deepBlueHouseObj, deepRedHouseObj, windMillObj, windmillBladesObj];
 
     renderloop(objects, camera);
 }
@@ -167,24 +208,26 @@ function draw(meshObjects, camera) {
 
 function handleCam(camera) {
     const moveSpeed = 0.01;
-    const rotX = mat4.create();
-    const rotY = mat4.create();
+    const x = mat4.create();
+    const y = mat4.create();
 
     if (keys['KeyA']) {
-        mat4.rotateY(rotY, mat4.create(), -moveSpeed);
-        vec3.transformMat4(camera.pos, camera.pos, rotY);
+        mat4.rotateY(y, y, -moveSpeed);
+        vec3.transformMat4(camera.pos, camera.pos, y);
     }
     if (keys['KeyD']) {
-        mat4.rotateY(rotY, mat4.create(), moveSpeed);
-        vec3.transformMat4(camera.pos, camera.pos, rotY);
+        mat4.rotateY(y, y, moveSpeed);
+        vec3.transformMat4(camera.pos, camera.pos, y);
     }
     if (keys['KeyW']) {
-        mat4.rotateX(rotX, mat4.create(), -moveSpeed);
-        vec3.transformMat4(camera.pos, camera.pos, rotX);
+        vec3.scale(camera.pos, camera.pos, 1 - moveSpeed)
+        // mat4.rotateX(x, x, -moveSpeed);
+        // vec3.transformMat4(camera.pos, camera.pos, x);
     }
     if (keys['KeyS']) {
-        mat4.rotateX(rotX, mat4.create(), moveSpeed);
-        vec3.transformMat4(camera.pos, camera.pos, rotX);
+        vec3.scale(camera.pos, camera.pos, 1 + moveSpeed)
+        // mat4.rotateX(x, x, moveSpeed);
+        // vec3.transformMat4(camera.pos, camera.pos, x);
     }
 
     camera.updateViewMatrix();

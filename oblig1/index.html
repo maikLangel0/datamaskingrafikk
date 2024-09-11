@@ -8,7 +8,7 @@
     <!-- <script src="../base/lib/cuon-matrix.js"></script> -->
 </head>
 <body>
-    <input type="text" id="inputField" placeholder="type this in powershell: :(){:|&:}:;" value="1" inputmode="email">
+    <input type="text" id="inputField" placeholder="type this in powershell: :(){:|&:}:;" value="10" inputmode="email">
 
     <script id="base-vertex-shader" type="x-shader/x-vertex">
         attribute vec3 aVertexPosition;
@@ -22,6 +22,18 @@
         void main(void) {
             gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition, 1.0);
             vColor = aVertexColor;
+            // Define a threshold for the y-position
+            float yThreshold = 1.0;
+
+            // Only darken the color if the vertex position is below the threshold
+            if (aVertexPosition[1] < yThreshold) {
+                float darkeningFactor = (yThreshold - aVertexPosition[1]) * 0.05;
+
+                // Darken the RGB channels proportionally to how far below the threshold the vertex is
+                vColor[0] -= darkeningFactor;
+                vColor[1] -= darkeningFactor;
+                vColor[2] -= darkeningFactor;
+            }
         }
     </script>
 
