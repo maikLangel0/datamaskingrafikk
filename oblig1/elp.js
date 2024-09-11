@@ -53,36 +53,27 @@ export class WebGLShader {
 	}
 }
 
+//Camera(pos: vec3, look: vec3, FOV: float, aspect: float, near: float, far: float)
 export class Camera {
-    /**
-     * @param {vec3} pos 
-     * @param {vec3} lookAt 
-     * @param {Number} FOV 
-     * @param {Number} aspectRatio 
-     * @param {Number} near 
-     * @param {Number} far 
-     * @returns
-     */
     constructor(pos, look, fov, aspect, close, far) {
-        /**@type {vec3} */
         this.pos = pos;
-        /**@type {vec3} */
         this.look = look;
-        /**@type {Number} */
         this.fov = fov;
-        /**@type {Number} */
         this.aspect = aspect;
-        /**@type {Number} */
         this.close = close;
-        /**@type {Number} */
         this.far = far;
 
         this.up = vec3.fromValues(0, 1, 0);
         this.viewMatrix = mat4.create();
         this.projectionMatrix = mat4.create();
 
+        this.updateViewMatrix()
+    }
+
+    updateViewMatrix() {
         mat4.lookAt(this.viewMatrix, this.pos, this.look, this.up);
-        mat4.perspective(this.projectionMatrix,
+        mat4.perspective(
+            this.projectionMatrix,
             this.fov,
             this.aspect,
             this.close,

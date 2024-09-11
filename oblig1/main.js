@@ -1,40 +1,93 @@
 import { WebGLShader, WebGLCanvas, Camera, clearCanvas, connectAttribute } from "./elp.js";
 import '../base/lib/gl-matrix.js';
-import {cubeMesh, ground, pointedRoof, height} from './mesh.js';
+import { house, ground, cylinder, blades } from "./meshGen.js";
 
-const webGLCanvas = new WebGLCanvas('myCanvas', document.body, 1916, 920);
+const webGLCanvas = new WebGLCanvas('myCanvas', document.body, 700, 920);
 const gl = webGLCanvas.gl;
 
 let vertexShaderS = document.getElementById('base-vertex-shader').innerHTML;
 let fragShaderS = document.getElementById('base-fragment-shader').innerHTML; 
+let input = document.getElementById('inputField');
+
+let keys = {};
+
+let baseShaders = initBaseShaders();
+
+window.addEventListener('keydown', (event) => {
+    keys[event.code] = true;
+})
+
+window.addEventListener('keyup', (event) => {
+    keys[event.code] = false;
+})
 
 export function main(){
 
     let camera = new Camera(
-        vec3.fromValues(10, 10, 10),
+        vec3.fromValues(10, 10, 30),
         vec3.fromValues(0, 0, 0),
         45,
         gl.canvas.clientWidth / gl.canvas.clientHeight,
         0.1,
         100
     );
+    const darkGreen = vec4.fromValues(0,0.4,0,0.5);
+    const red = vec4.fromValues(1,0,0,1);
+    const darkRed = vec4.fromValues(0.2,0,0,1);
+    const maroon = vec4.fromValues(0.5,0.1,0.2,0.5);
+    const lightBlue = vec4.fromValues(0, 0.4, 1, 1);
+    const black = vec4.fromValues(0,0,0,1);
+    const darkBlue = vec4.fromValues(0.1,0,0.4,0.2);
+    const white = vec4.fromValues(1,1,1,1);
+    const gray = vec4.fromValues(0,0,0,0.1);
 
-    let baseShaders = initBaseShaders();
+    const groundDim = vec3.fromValues(50,0,50);
+    const groundPos = vec3.fromValues(0,0,0);
 
-    //initMesh(Mesh: Float32Array, Color: vec4, position: vec3, shader: Shader, mode: gl.xxx)
-    let cubeObj = initMesh(cubeMesh, vec4.fromValues(1,0,0,1), 
-        vec3.fromValues(3,0,2), baseShaders, gl.TRIANGLES);
+    const redHouseDim = vec3.fromValues(1,4,1);
+    const redHousePos = vec3.fromValues(-2,0,0);
 
-    let groundObj = initMesh(ground, vec4.fromValues(0,0.4,0,0.5),
-        vec3.fromValues(0,0,0), baseShaders, gl.TRIANGLES);
+    const deepBlueHouseDim = vec3.fromValues(1,3,1);
+    const deepBlueHousePos = vec3.fromValues(-4,0,0);
 
-    let pRoofObj = initMesh(pointedRoof, vec4.fromValues(0.2,0,0,1),
-        vec3.fromValues(3,height,2), baseShaders, gl.TRIANGLES);
+    const deepRedHouseDim = vec3.fromValues(2,6,2);
+    const deepRedHousePos = vec3.fromValues(-7,0,0);
 
-    draw([cubeObj, groundObj, pRoofObj], camera);
+    const windmillDim = vec3.fromValues(1,10,1);
+    const windmillPos = vec3.fromValues(0, 0,-10);
+
+    const bladesDim = vec3.fromValues(3, 3, 3);
+    const bladesPos = vec3.fromValues(0, 10, -10);
+
+    /*initMesh(
+        mesh: Float32Array, 
+        dimentions: vec3, 
+        color: vec4, 
+        position: vec3, 
+        shader: Shader, 
+        mode: gl.---)
+    */
+
+    const redHouse = house(redHouseDim, red, 1, black, true);
+    const deepBlueHouse = house(deepBlueHouseDim, darkBlue, 2, black, false);
+    const deepRedHouse = house(deepRedHouseDim, darkRed, 0, black, false, true);
+    const windmillPole = cylinder(windmillDim, white);
+    const windmillBlades = blades(bladesDim, gray);
+    const grass = ground(groundDim)
+
+    let groundObj = initMesh(grass,groundPos, baseShaders, gl.TRIANGLES);
+    let redHouseObj = initMesh(redHouse, redHousePos, baseShaders, gl.TRIANGLES);
+    let deepBlueHouseObj = initMesh(deepBlueHouse, deepBlueHousePos, baseShaders, gl.TRIANGLES);
+    let deepRedHouseObj = initMesh(deepRedHouse, deepRedHousePos, baseShaders, gl.TRIANGLES);
+    let windMillObj = initMesh(windmillPole, windmillPos, baseShaders, gl.TRIANGLES);
+    let windmillBladesObj = initMesh(windmillBlades, bladesPos, baseShaders, gl.TRIANGLES);
+
+    let objects = [groundObj, redHouseObj, deepBlueHouseObj, deepRedHouseObj, windMillObj, windmillBladesObj];
+
+    renderloop(objects, camera);
 }
 
-function initMesh(mesh, color, pos, shader, mode) {
+function initMesh(mesh, pos, shader = baseShaders, mode = gl.TRIANGLES) {
 
     const posBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
@@ -43,12 +96,26 @@ function initMesh(mesh, color, pos, shader, mode) {
 
     return {
         posBuffer: posBuffer,
-        vertexCount: mesh.length / 3,
-        color: color,
+        vertexCount: mesh.length / 7,
         pos: pos,
+        rotation: mat4.create(),
         shader: shader,
         mode: mode
     }
+}
+
+function renderloop(objects, camera) {
+
+    function loop() {
+        handleCam(camera);
+
+        mat4.rotateZ(objects[5].rotation, objects[5].rotation, 0.01* (input.value));
+
+        draw(objects, camera);
+
+        requestAnimationFrame(loop);
+    }
+    loop();
 }
 
 function initBaseShaders() {
@@ -75,12 +142,16 @@ function draw(meshObjects, camera) {
 
     for (let meshObj of meshObjects) {
         gl.useProgram(meshObj.shader.program)
-        connectAttribute(gl, meshObj.shader.attribLocs.vertexPos, meshObj.posBuffer);
-
-        gl.uniform4fv(meshObj.shader.uniformLocs.uFragColor, meshObj.color);
+        connectAttribute(gl, meshObj.shader.attribLocs.vertexPos, meshObj.posBuffer, 
+            undefined, undefined, undefined, 7*Float32Array.BYTES_PER_ELEMENT);
+            
+        connectAttribute(gl, meshObj.shader.attribLocs.vertexCol, meshObj.posBuffer, 
+            4, undefined, undefined, 7*Float32Array.BYTES_PER_ELEMENT, 3*Float32Array.BYTES_PER_ELEMENT);
         
         let modelMatrix = mat4.create();
         mat4.identity(modelMatrix);
+
+        mat4.multiply(modelMatrix, modelMatrix, meshObj.rotation);
 
         mat4.translate(modelMatrix, modelMatrix, meshObj.pos)
 
@@ -92,4 +163,29 @@ function draw(meshObjects, camera) {
 
         gl.drawArrays(meshObj.mode, 0, meshObj.vertexCount)
     }
+}
+
+function handleCam(camera) {
+    const moveSpeed = 0.01;
+    const rotX = mat4.create();
+    const rotY = mat4.create();
+
+    if (keys['KeyA']) {
+        mat4.rotateY(rotY, mat4.create(), -moveSpeed);
+        vec3.transformMat4(camera.pos, camera.pos, rotY);
+    }
+    if (keys['KeyD']) {
+        mat4.rotateY(rotY, mat4.create(), moveSpeed);
+        vec3.transformMat4(camera.pos, camera.pos, rotY);
+    }
+    if (keys['KeyW']) {
+        mat4.rotateX(rotX, mat4.create(), -moveSpeed);
+        vec3.transformMat4(camera.pos, camera.pos, rotX);
+    }
+    if (keys['KeyS']) {
+        mat4.rotateX(rotX, mat4.create(), moveSpeed);
+        vec3.transformMat4(camera.pos, camera.pos, rotX);
+    }
+
+    camera.updateViewMatrix();
 }
