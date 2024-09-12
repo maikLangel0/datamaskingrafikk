@@ -1,5 +1,5 @@
 import { WebGLShader, WebGLCanvas, Camera, clearCanvas, connectAttribute } from "./elp.js";
-import '../base/lib/gl-matrix.js';
+import './gl-matrix.js';
 import { house, ground, cylinder, blades, houseCluster, road, fence } from "./meshGen.js";
 import { colors } from "./colors.js";
 import { pos, dim } from "./meshDimPositions.js";
