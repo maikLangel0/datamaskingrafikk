@@ -190,6 +190,7 @@ export function coneRoofMesh(dimentions, radius, height, segments, color) {
     const g = color[1];
     const b = color[2];
     const a = color[3];
+    height = height * 0.5;
 
     const angleStep = (Math.PI * 2) / segments;
     let vertices = [];
@@ -219,43 +220,42 @@ export function coneRoofMesh(dimentions, radius, height, segments, color) {
 export function windowMesh(offX, offY, offZ, height) {
 
     return [
-        0.2 + offX, 0 + offY, 1.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 7
-        0.2 + offX, height + offY, 1.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 8
-       -0.2 + offX, height + offY, 1.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 9
+        0.2 + offX, 0 + offY, 0.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 7
+        0.2 + offX, height + offY, 0.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 8
+       -0.2 + offX, height + offY, 0.001 +  offZ,  0.3, 0.4, 1, 1,  // Vertex 9
 
-        0.2 + offX, 0 + offY, 1.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 10
-       -0.2 + offX, 0 + offY, 1.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 11
-       -0.2 + offX, height + offY, 1.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 12
+        0.2 + offX, 0 + offY, 0.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 10
+       -0.2 + offX, 0 + offY, 0.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 11
+       -0.2 + offX, height + offY, 0.001 +  offZ,  0, 0.4, 1, 1,  // Vertex 12
     ];
 }
 
 export function doorMesh(offZ) {
     return [
-        0.3, 0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 1
-        0.3, 0.9, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 2
-       -0.3, 0.9, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 3
+        0.3, 0, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 1
+        0.3, 0.9, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 2
+       -0.3, 0.9, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 3
 
-        0.3, 0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 4
-       -0.3, 0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 5
-       -0.3, 0.9, 1.01 +  offZ,  0, 0, 0, 1  // Vertex 6
+        0.3, 0, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 4
+       -0.3, 0, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 5
+       -0.3, 0.9, 0.01 +  offZ,  0, 0, 0, 1  // Vertex 6
     ];
 }
 
 export function garageMesh(offZ) {
     return [
-        0.9, 0.0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 1
-        0.9, 0.9, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 2
-       -0.9, 0.9, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 3
+        0.9, 0.0, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 1
+        0.9, 0.9, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 2
+       -0.9, 0.9, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 3
 
-        0.9, 0.0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 4
-       -0.9, 0.0, 1.01 +  offZ,  0, 0, 0, 1,  // Vertex 5
-       -0.9, 0.9, 1.01 +  offZ,  0, 0, 0, 1  // Vertex 6
+        0.9, 0.0, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 4
+       -0.9, 0.0, 0.01 +  offZ,  0, 0, 0, 1,  // Vertex 5
+       -0.9, 0.9, 0.01 +  offZ,  0, 0, 0, 1  // Vertex 6
     ];
 }
 
 export function cylinderMesh(dimentions, radius, height, segments, color) {
     const offsetX = dimentions[0];
-    const offsetY = 0;
     const offsetZ = dimentions[2];
     const r = color[0];
     const g = color[1];
@@ -270,24 +270,24 @@ export function cylinderMesh(dimentions, radius, height, segments, color) {
         const nextAngle = (i + 1) * angleStep;
 
         vertices.push(
-            offsetX, height + offsetY, offsetZ, r, g, b, a,
-            offsetX + radius * Math.cos(angle), height + offsetY, offsetZ + radius * Math.sin(angle), r, g, b, a,
-            offsetX + radius * Math.cos(nextAngle), height + offsetY, offsetZ + radius * Math.sin(nextAngle), r, g, b, a
+            offsetX, height, offsetZ, r, g, b, a,
+            offsetX + radius * Math.cos(angle), height, offsetZ + radius * Math.sin(angle), r, g, b, a,
+            offsetX + radius * Math.cos(nextAngle), height, offsetZ + radius * Math.sin(nextAngle), r, g, b, a
         );
 
         vertices.push(
-            offsetX, offsetY, offsetZ, r, g, b, a,
-            offsetX + radius * Math.cos(angle), offsetY, offsetZ + radius * Math.sin(angle), r, g, b, a,
-            offsetX + radius * Math.cos(nextAngle), offsetY, offsetZ + radius * Math.sin(nextAngle), r, g, b, a
+            offsetX, 0, offsetZ, r, g, b, a,
+            offsetX + radius * Math.cos(angle), 0, offsetZ + radius * Math.sin(angle), r, g, b, a,
+            offsetX + radius * Math.cos(nextAngle), 0, offsetZ + radius * Math.sin(nextAngle), r, g, b, a
         );
 
         vertices.push(
-            offsetX + radius * Math.cos(angle), offsetY, offsetZ + radius * Math.sin(angle), r, g, b, a,
-            offsetX + radius * Math.cos(angle), height + offsetY, offsetZ + radius * Math.sin(angle), r, g, b, a,
-            offsetX + radius * Math.cos(nextAngle), height + offsetY, offsetZ + radius * Math.sin(nextAngle), r, g, b, a,
-            offsetX + radius * Math.cos(angle), offsetY, offsetZ + radius * Math.sin(angle), r, g, b, a,
-            offsetX + radius * Math.cos(nextAngle), height + offsetY, offsetZ + radius * Math.sin(nextAngle), r, g, b, a,
-            offsetX + radius * Math.cos(nextAngle), offsetY, offsetZ + radius * Math.sin(nextAngle), r, g, b, a
+            offsetX + radius * Math.cos(angle), 0, offsetZ + radius * Math.sin(angle), r, g, b, a,
+            offsetX + radius * Math.cos(angle), height, offsetZ + radius * Math.sin(angle), r, g, b, a,
+            offsetX + radius * Math.cos(nextAngle), height, offsetZ + radius * Math.sin(nextAngle), r, g, b, a,
+            offsetX + radius * Math.cos(angle), 0, offsetZ + radius * Math.sin(angle), r, g, b, a,
+            offsetX + radius * Math.cos(nextAngle), height, offsetZ + radius * Math.sin(nextAngle), r, g, b, a,
+            offsetX + radius * Math.cos(nextAngle), 0, offsetZ + radius * Math.sin(nextAngle), r, g, b, a
         );
     }
     return new Float32Array(vertices);

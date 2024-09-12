@@ -40,5 +40,5 @@ export const dim = {
 
     windmill: [1,10,1],
 
-    roadDim: [22, 0.002, 1.5],
+    roadDim: [100, 0.002, 1.1],
 }

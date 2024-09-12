@@ -1,11 +1,11 @@
 import { cubeMesh, pointedRoofMesh, windowMesh, doorMesh, garageMesh, groundMesh, aFrameRoofMesh, coneRoofMesh, cylinderMesh, bladesMesh, roadMesh, plankMesh } from './mesh.js';
 import { colors } from './colors.js';
 
-function roofChoice(roofDim, roofCol, roofType, height, lengthx){
+function roofChoice(roofDim, roofCol, roofType, height, length){
     let options = [
         pointedRoofMesh(roofDim, roofCol, height), 
         aFrameRoofMesh(roofDim, roofCol, height),
-        coneRoofMesh(roofDim, lengthx, height, 20, roofCol)];
+        coneRoofMesh(roofDim, length, height, 20, roofCol)];
 
     return options[roofType];
 }
@@ -13,26 +13,25 @@ function roofChoice(roofDim, roofCol, roofType, height, lengthx){
 export function house(houseDim, houseCol, roofType, roofCol, door = false, garage = false) {
     let houseMesh = cubeMesh(houseDim, houseCol);
     const height = houseDim[1];
-    const lengthx = houseDim[0];
-    const z = houseDim[2] - 1;
+    const length = houseDim[0];
+    const width = houseDim[2];
     
-    if (door) {
-        houseMesh.push(...doorMesh(z));
+    if (door) {houseMesh.push(...doorMesh(width));
     }
     else if (garage) {
-        houseMesh.push(...garageMesh(z));
+        houseMesh.push(...garageMesh(width));
     }
     const roofDim = [houseDim[0], houseDim[1] * 0.5, houseDim[2]];
-    const roof = roofChoice(roofDim, roofCol, roofType, height, lengthx);
+    const roof = roofChoice(roofDim, roofCol, roofType, height, length);
     houseMesh.push(...roof);
 
     for (let i = 0; i < height; i++) {
         for (let j = -1; j < 2; j++) {
-            let window = windowMesh(j* lengthx * 0.6, 0.3 + (i), z, 0.5);
+            let window = windowMesh(j* length * 0.6, 0.3 + (i), width, 0.5);
             houseMesh.push(...window);
         }
     }
-    houseMesh.push(...roadMesh([lengthx, 0.005, 2.5], colors.lightGray, 2.5));
+    houseMesh.push(...roadMesh([length, 0.005, 2.5], colors.lightGray, 2.5));
 
     return new Float32Array(houseMesh)
 }
@@ -121,11 +120,8 @@ export function fence(housesDim) {
     let fenceWidth = 0;
     let firstHouseLength = housesDim[0][0];
 
-    const x = (fenceLength + gap) * 2;
-
     for (let house of housesDim) {
         fenceLength += house[0];
-
 
         if (house[2] > fenceWidth) {
             fenceWidth = house[2];

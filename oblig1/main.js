@@ -2,7 +2,7 @@ import { WebGLShader, WebGLCanvas, Camera, clearCanvas, connectAttribute } from 
 import '../base/lib/gl-matrix.js';
 import { house, ground, cylinder, blades, houseCluster, road, fence } from "./meshGen.js";
 import { colors } from "./colors.js";
-import { pos, dim } from "./meshDImPositions.js";
+import { pos, dim } from "./meshDimPositions.js";
 
 const webGLCanvas = new WebGLCanvas('myCanvas', document.body, 1916, 900);
 const gl = webGLCanvas.gl;
@@ -182,7 +182,7 @@ function draw(meshObjects, camera) {
     clearCanvas(gl);
 
     for (let meshObj of meshObjects) {
-        gl.useProgram(meshObj.shader.program)
+        gl.useProgram(meshObj.shader.program);
         connectAttribute(gl, meshObj.shader.attribLocs.vertexPos, meshObj.posBuffer, 
             undefined, undefined, undefined, 7*Float32Array.BYTES_PER_ELEMENT);
             
